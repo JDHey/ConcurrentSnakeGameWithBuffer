@@ -51,7 +51,7 @@ public class Snake {
 		increaseLength(STARTING_LENGTH/DEFAULT_SPEED, true);
 	}
 
-	String getId() {
+	public String getId() {
 		return id;
 	}
 	
@@ -150,7 +150,7 @@ public class Snake {
 		nodeList.remove(0);
 	}
 
-	int getDirection() {
+	public int getDirection() {
 		return direction;
 	}
 
@@ -278,5 +278,45 @@ public class Snake {
 
 	public void setLastKeyPressed(Move keyPressed) {
 		lastKeyPressed = keyPressed;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Color getColour() {
+		return colour;
+	}
+
+	public void setColour(Color colour) {
+		this.colour = colour;
+	}
+
+	public void setCurrentState(State currentState) {
+		this.currentState = currentState;
+	}
+
+	public Move getLastKeyPressed() {
+		return lastKeyPressed;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public List<SnakeNode> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<SnakeNode> nodeList) {
+		this.nodeList = nodeList;
 	}
 }

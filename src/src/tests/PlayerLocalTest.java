@@ -198,24 +198,6 @@ public class PlayerLocalTest {
         assertEquals(expected, player.getRightKey());
     }
 
-   /* @Test
-    public void getSnake_test_01() {
-        System.out.println("Testing PlayerLocal Class: getSnake_test_01");
-        player = mock(PlayerLocal.class, Mockito.CALLS_REAL_METHODS);
-        Snake expected = null;
-        assertEquals(expected, player.getSnake());
-    }*/
-
-  /*  @Test
-    public void setSnake_test_01() {
-        System.out.println("Testing PlayerLocal Class: setSnake_test_01");
-        player = new PlayerLocal("Terry Dean", gameState, upKey, downKey, leftKey, rightKey);
-        snake = new Snake("MySnake", 0, 0);
-        player.setSnake(snake);
-        Snake expected = snake;
-        assertEquals(expected, player.getSnake());
-    }*/
-
     @Test
     public void keyPressed_01() {
         System.out.println("Testing PlayerLocal Class: keyPressed_01");
