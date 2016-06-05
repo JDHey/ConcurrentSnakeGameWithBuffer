@@ -1,4 +1,4 @@
-package tests;
+package src.tests;
 
 import edu.unisa.concurrentSnakeGame.*;
 import javafx.scene.input.KeyCode;
@@ -29,6 +29,9 @@ public class PlayerLocalTest {
     private GameState gameState;
 
     @Mock
+    BufferIO myBuffer;
+
+    @Mock
     private Snake snake;
 
     private int upKey = VK_UP;
@@ -45,26 +48,29 @@ public class PlayerLocalTest {
     @Mock
     KeyEvent event;
 
-    @Test
+   @Test
     public void args_constructor_test_01() {
-        System.out.println("Testing PlayerLocal Class: args_constructor_test_01");
-        player = new PlayerLocal("Terry Dean", gameState, upKey, downKey, leftKey, rightKey);
-        gameState = new GameState();
-        gameState.addSnake(snake);
-        gameState.addSnake(snake);
-        snakeQueue = gameState.getSnakeQueue();
-        String expected_id = "Terry Dean";
-        int expected_num_snakes = 2;
-        int expected_upKey = VK_UP;
-        int expected_downKey = VK_DOWN;
-        int expected_leftKey = VK_LEFT;
-        int expected_rightKey = VK_RIGHT;
-        assertEquals(expected_id, player.getPlayerId());
-        assertEquals(expected_num_snakes, snakeQueue.size());
-        assertEquals(expected_upKey, player.getUpKey());
-        assertEquals(expected_downKey, player.getDownKey());
-        assertEquals(expected_leftKey, player.getLeftKey());
-        assertEquals(expected_rightKey, player.getRightKey());
+       System.out.println("Testing PlayerLocal Class: args_constructor_test_01");
+       player = new PlayerLocal("Terry Dean", myBuffer, gameState, upKey, downKey, leftKey, rightKey);
+       player.setLastKeyPressed(Player.Move.LEFT);
+       myBuffer = new BufferIO();
+       gameState = new GameState();
+       gameState.addPlayer(player.getPlayerId());
+       String expected_id = "Terry Dean";
+       int expected_moves = 1;
+       int expected_num_snakes = 1;
+       int expected_upKey = VK_UP;
+       int expected_downKey = VK_DOWN;
+       int expected_leftKey = VK_LEFT;
+       int expected_rightKey = VK_RIGHT;
+       Enum expected = Player.Move.LEFT;
+       assertEquals(expected, player.getLastKeyPressed());
+       assertEquals(expected_id, player.getPlayerId());
+       assertEquals(expected_num_snakes, gameState.getSnakeMap().size());
+       assertEquals(expected_upKey, player.getUpKey());
+       assertEquals(expected_downKey, player.getDownKey());
+       assertEquals(expected_leftKey, player.getLeftKey());
+       assertEquals(expected_rightKey, player.getRightKey());
     }
 
     @Test
@@ -192,15 +198,15 @@ public class PlayerLocalTest {
         assertEquals(expected, player.getRightKey());
     }
 
-    @Test
+   /* @Test
     public void getSnake_test_01() {
         System.out.println("Testing PlayerLocal Class: getSnake_test_01");
         player = mock(PlayerLocal.class, Mockito.CALLS_REAL_METHODS);
         Snake expected = null;
         assertEquals(expected, player.getSnake());
-    }
+    }*/
 
-    @Test
+  /*  @Test
     public void setSnake_test_01() {
         System.out.println("Testing PlayerLocal Class: setSnake_test_01");
         player = new PlayerLocal("Terry Dean", gameState, upKey, downKey, leftKey, rightKey);
@@ -208,7 +214,7 @@ public class PlayerLocalTest {
         player.setSnake(snake);
         Snake expected = snake;
         assertEquals(expected, player.getSnake());
-    }
+    }*/
 
     @Test
     public void keyPressed_01() {

@@ -38,7 +38,7 @@ public abstract class Player {
 		this.isloggedin = true;
 		resetLastKeyPressed();
 		
-		myBuffer.offer(new PlayerNetworkData(getPlayerId(), lastKeyPressed));
+		myBuffer.offer(new PlayerNetworkData(getPlayerId(), lastKeyPressed));// addition
 		
 		if (renderWindow) {
 			//Renders window
@@ -77,7 +77,15 @@ public abstract class Player {
 	public void setIsloggedin(boolean isloggedin) {	
 		this.isloggedin = isloggedin;
 	}
-	
+
+	public static BufferIO getMyBuffer() {
+		return myBuffer;
+	}
+
+	public static void setMyBuffer(BufferIO myBuffer) {
+		Player.myBuffer = myBuffer;
+	}
+
 	public void updateBuffer() {
 		if (sendUpdateToBuffer) {
 			if (isloggedin) {

@@ -1,10 +1,5 @@
 package edu.unisa.concurrentSnakeGame;
 
-/**
- * Used to store the data moved through the network
- * @author Jayden
- *
- */
 public class PlayerNetworkData {
 	private String id;
 	private Player.Move keyPressed;

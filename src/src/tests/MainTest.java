@@ -1,4 +1,4 @@
-package tests;
+package src.tests;
 
 /**
  * Created by Terry on 29/05/2016.

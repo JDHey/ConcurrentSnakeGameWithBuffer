@@ -51,15 +51,14 @@ public class Main implements KeyListener {
 
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(AMOUNT_OF_LOCAL_PLAYERS+AMOUNT_OF_AI_PLAYERS);
 		
-		addLocalPlayers("Player",AMOUNT_OF_LOCAL_PLAYERS);
+		addLocalPlayers("Player",AMOUNT_OF_LOCAL_PLAYERS, executor);
 		addAIPlayers("AI",AMOUNT_OF_AI_PLAYERS, executor);
 		executor.shutdown();
-		
 		initComponents();
 		renderLoop();
 	}
 	
-	private void addLocalPlayers(String name, int amount) {
+	private void addLocalPlayers(String name, int amount, ThreadPoolExecutor executor) {
 		for (int i = 0; i<AMOUNT_OF_LOCAL_PLAYERS; i++) {			
 			new PlayerLocal("Player"+(i+1), myBuffer, myGame, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
 		}
@@ -188,7 +187,7 @@ public class Main implements KeyListener {
 	private void initComponents() {
 		jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jFrame.setResizable(true);
+		jFrame.setResizable(false);
 		jFrame.setTitle("SERVER VIEW");
 		jFrame.setSize(Main.GAME_SIZE,Main.GAME_SIZE);
 		

@@ -13,10 +13,10 @@ public class GameState {
 	public static final int DELAY_AMOUNT = 50; //In milliseconds
 	
 	private List<FoodNode> foodNodeList = Collections.synchronizedList(new ArrayList<FoodNode>());
-	private ConcurrentHashMap<String,Snake> snakeMap = new ConcurrentHashMap<String,Snake>();
+	private ConcurrentHashMap<String,Snake> snakeMap = new ConcurrentHashMap<String,Snake>();// addition
 	
-	private boolean isPaused = false;
-	private boolean isSlow = false;
+	private boolean isPaused = false; // addition
+	private boolean isSlow = false; // addition
 	
 	/**
 	 * Draws all the snakes. 
@@ -210,5 +210,9 @@ public class GameState {
 	
 	public boolean getSlow() {
 		return isSlow;
+	}
+
+	public ConcurrentHashMap<String, Snake> getSnakeMap() {
+		return snakeMap;
 	}
 }

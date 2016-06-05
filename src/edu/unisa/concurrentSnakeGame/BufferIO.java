@@ -27,4 +27,12 @@ public class BufferIO {
 		}
 		return data;
 	}
+
+	public BlockingQueue<PlayerNetworkData> getBufferQueue() {
+		return bufferQueue;
+	}
+
+	public void setBufferQueue(BlockingQueue<PlayerNetworkData> bufferQueue) {
+		this.bufferQueue = bufferQueue;
+	}
 }
