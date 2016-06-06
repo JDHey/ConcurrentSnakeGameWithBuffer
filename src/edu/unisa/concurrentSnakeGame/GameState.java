@@ -158,7 +158,7 @@ public class GameState {
 		synchronized(foodList) {
 			for(FoodNode f : foodList) {
 				if (f.collidesWith(snake.getHead())) {
-					snake.increaseLength(20, false);
+					snake.increaseLength(Snake.FOOD_LENGTH_INCREASE, false);
 					snake.increaseScore(f.getPoints());
 					collidedFood = f;
 					break;

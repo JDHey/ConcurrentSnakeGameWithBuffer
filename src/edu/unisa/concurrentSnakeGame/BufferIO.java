@@ -3,6 +3,11 @@ package edu.unisa.concurrentSnakeGame;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Buffer queue used to simulate a network stream of data
+ * @author Jayden
+ *
+ */
 public class BufferIO {
 	BlockingQueue<PlayerNetworkData> bufferQueue = new LinkedBlockingQueue<PlayerNetworkData>();
 	

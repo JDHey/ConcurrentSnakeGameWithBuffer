@@ -161,7 +161,7 @@ public class Main implements KeyListener {
 			t.start();
 		}
 		
-		Thread t2 = new Thread(new ServerGameStateUpdaterThread(myGame, myBuffer));
+		Thread t2 = new Thread(new ServerGameStateUpdaterThread(myGame));
 		t2.setName("GameStateUpdater");
 		t2.start();
 

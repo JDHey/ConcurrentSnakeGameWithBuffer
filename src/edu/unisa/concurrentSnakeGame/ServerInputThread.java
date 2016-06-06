@@ -32,7 +32,9 @@ public class ServerInputThread implements Runnable {
 			myGame.delay();
 			
 			PlayerNetworkData data = myBuffer.take();
+			//Sets the direction of the player
 			if (!myGame.setDirectionPlayer(data)) {
+				//If it doesn't work, add a player
 				myGame.addPlayer(data.getId());
 			}
 		}

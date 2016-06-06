@@ -4,7 +4,7 @@ public class FoodThread implements Runnable{
 
 	static GameState myGame;
 	public int id = 0;
-	public static final int MAX_FOOD =  5;
+	public static final int MAX_FOOD =  50;
 	
 	public FoodThread(GameState gs) {
 		FoodThread.myGame = gs;

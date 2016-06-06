@@ -88,6 +88,5 @@ public class PlayerAI extends Player implements Runnable {
 		} else {
 			setLastKeyPressed(Player.Move.NONE);
 		}
-		sendUpdateToBuffer = true;
 	}
 }

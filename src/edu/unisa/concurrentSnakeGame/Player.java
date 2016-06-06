@@ -50,6 +50,11 @@ public abstract class Player {
 		return lastKeyPressed;
 	}
 
+	/**
+	 * Sets lastKeyPressed to the input if it is different.
+	 * Then it sets sendUpdateToBuffer to true
+	 * @param input
+	 */
 	public void setLastKeyPressed(Move input) {
 		if (getLastKeyPressed() != input) {
 			this.lastKeyPressed = input;
@@ -86,6 +91,9 @@ public abstract class Player {
 		Player.myBuffer = myBuffer;
 	}
 
+	/**
+	 * Sends an update to the buffer if sendUpdateToBuffer is true
+	 */
 	public void updateBuffer() {
 		if (sendUpdateToBuffer) {
 			if (isloggedin) {
