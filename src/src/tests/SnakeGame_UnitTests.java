@@ -10,7 +10,8 @@ import org.junit.runners.Suite;
         PlayerTest.class,
         PlayerLocalTest.class,
         PlayerAITest.class,
-        SnakeTest.class
+        SnakeTest.class,
+        BufferIOTest.class
 })
 
 /**

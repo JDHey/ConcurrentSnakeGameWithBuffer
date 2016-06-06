@@ -40,7 +40,7 @@ public class SnakeTest {
 
     @Test
     public void args_constructor_test_01() {
-        System.out.println("Testing Abstract Player  Class: args_constructor_test_01");
+        System.out.println("Testing  Snake Class: args_constructor_test_01");
         nodeList = Collections.synchronizedList(new ArrayList<SnakeNode>());
         //snake = Mockito.mock(Snake.class, Mockito.CALLS_REAL_METHODS);
         snake = new Snake("MySnake", 10,10);
