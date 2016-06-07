@@ -1,6 +1,7 @@
 package edu.unisa.concurrentSnakeGame;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -44,12 +45,14 @@ public class DrawSurface extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
 		//Draws GameState
 		myGameState.draw(g, playerId);
-
+		
+		//Render UI last so it appears on top
 		if (isServerRender) {
-			//Render UI last so it appears on top
 			g.setColor(Color.BLACK);
+			g.setFont(new Font("Courier New", Font.BOLD, 12));
 			if (drawSlowText) {
 				g.drawString("RANDOM SERVER DELAYS ON (Press S to toggle)", 0, Main.GAME_SIZE-30);
 			} else {

@@ -34,7 +34,7 @@ public class PlayerAI extends Player implements Runnable {
 		long lastLoopTime = System.nanoTime();
 		long lastFpsTime = 0;
 		long fps = 0;
-		final int TARGET_FPS = 60;
+		final int TARGET_FPS = 10; //Runs 10 times a second
 		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
 		while(!Thread.currentThread().isInterrupted()) {
@@ -81,9 +81,9 @@ public class PlayerAI extends Player implements Runnable {
 	private void pressAKey() {
 		double rand = Math.random()*100;
 		
-		if (rand < 5) {
+		if (rand < 40) {
 			setLastKeyPressed(Player.Move.LEFT);
-		} else if (rand >= 5 && rand < 10) {
+		} else if (rand >= 40 && rand < 80) {
 			setLastKeyPressed(Player.Move.RIGHT);
 		} else {
 			setLastKeyPressed(Player.Move.NONE);

@@ -88,7 +88,7 @@ public class Snake {
 		}
 	}
 	
-	public void decreaseLength(int amount) {
+	private void decreaseLength(int amount) {
 		for (int i=0; i<amount; i++) {
 			if (nodeList.size()>MINIMUM_SIZE) {
 				nodeList.remove(0);
@@ -110,7 +110,7 @@ public class Snake {
 	 * Returns the tail of the snake
 	 * @return
 	 */
-	public SnakeNode getTail() {
+	private SnakeNode getTail() {
 		return nodeList.get(0);
 	}
 	
@@ -158,11 +158,11 @@ public class Snake {
 		return direction;
 	}
 
-	public void setDirection(int direction) {
+	void setDirection(int direction) {
 		this.direction = direction;
 	}
 	
-	public void changeDirection() {
+	void changeDirection() {
 		switch (lastKeyPressed) {
 			case UP:
 				if (nodeList.size()>MINIMUM_SIZE) {

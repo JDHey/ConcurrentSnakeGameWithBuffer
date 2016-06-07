@@ -1,6 +1,7 @@
 package edu.unisa.concurrentSnakeGame;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class GameState {
 	 * If the snakeId matches, it means the Player rendering must own that snake.
 	 */
 	public void draw(Graphics g, String id) {
-		if (id != null && snakeMap.get(id) != null) {
+		if (checkSnakeExists(id)) {
 			Snake snake = snakeMap.get(id);
 			
 			Graphics2D g2 = (Graphics2D) g;
@@ -32,8 +33,49 @@ public class GameState {
 			//g2.translate(snake.getHead().getX(), snake.getHead().getY());
 			//g2.scale(1,1);
 			g2.translate(-snake.getHead().getX()+(PlayerWindow.WINDOW_SIZE/2), -snake.getHead().getY()+(PlayerWindow.WINDOW_SIZE/2));
+			drawGame(g, id);
+			if (snake.getCurrentState() == Snake.State.DEAD) {
+				drawDeathScreen(g,snake);
+			}
+		} else {
+			drawGame(g, id);
 		}
 		
+	}
+	
+	public boolean checkSnakeExists(String id) {
+		if (id != null && snakeMap.get(id) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void drawDeathScreen(Graphics g, Snake snake) {
+		String text;
+		int textWidth;
+		
+		g.setFont(new Font("Courier New", Font.BOLD, 40));
+		
+		//Cover screen with grey
+		g.setColor(new Color(0,0,0,125));
+		g.fillRect(0-Main.GAME_SIZE, 0-Main.GAME_SIZE, Main.GAME_SIZE*3, Main.GAME_SIZE*3);
+		
+		//Draw death text
+		int snakeX = (int)Math.round(snake.getHead().getX());
+		int snakeY = (int)Math.round(snake.getHead().getY());
+		g.setColor(Color.WHITE);
+		text = "Your score was: "+snake.getScore();
+		textWidth = g.getFontMetrics().stringWidth(text);
+		g.drawString(text, snakeX - (textWidth/2), snakeY);
+	
+		text = "Press any key to restart!";
+		textWidth = g.getFontMetrics().stringWidth(text);
+		g.drawString(text, snakeX - (textWidth/2), snakeY + 50);
+	
+	}
+
+	private void drawGame(Graphics g, String id) {		
 		drawBackground(g);
 		
 		synchronized (foodNodeList) {
@@ -119,9 +161,10 @@ public class GameState {
 		}
 	}
 
-	public void addPlayer(String id) {
+	public Snake addPlayer(String id) {
 		Snake snake = makeSnake(id);
 		snakeMap.put(id, snake);
+		return snake;
 	}
 	
 	/**
@@ -139,15 +182,19 @@ public class GameState {
 
 	public void updateAll(double delta) {
 		for (Snake snake : snakeMap.values()) {
-		    snake.update(delta);
 		    if (snake.getCurrentState() == Snake.State.ALIVE) {
+		    	snake.update(delta);
 		    	checkFood(snake);
 		    	
 			    if (checkCollision(snake)) {
 			    	snake.kill();
 			    }			    
-		    } else if (snake.getCurrentState() == Snake.State.DEAD) {
-		    	snakeMap.remove(snake);
+		    } else if (snake.getCurrentState() == Snake.State.DYING) {
+		    	snake.update(delta);
+			} else if (snake.getCurrentState() == Snake.State.DEAD) {
+		    	//snakeMap.remove(snake.getId());
+				//We need the snakes still in the list to 
+				//save their score
 		    }
 		}
 	}
@@ -214,5 +261,14 @@ public class GameState {
 
 	public ConcurrentHashMap<String, Snake> getSnakeMap() {
 		return snakeMap;
+	}
+
+	public Snake getSnake(String id) {
+		return snakeMap.get(id);
+	}
+
+	public void resetPlayer(String id) {
+		snakeMap.remove(id);
+		addPlayer(id);
 	}
 }
