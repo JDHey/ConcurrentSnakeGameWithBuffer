@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +16,7 @@ public class GameState {
 	
 	private List<FoodNode> foodNodeList = Collections.synchronizedList(new ArrayList<FoodNode>());
 	private ConcurrentHashMap<String,Snake> snakeMap = new ConcurrentHashMap<String,Snake>();// addition
+	private List<Snake> leaderBoard = Collections.synchronizedList(new ArrayList<Snake>(snakeMap.values()));
 	
 	private boolean isPaused = false; // addition
 	private boolean isSlow = false; // addition
@@ -87,6 +89,8 @@ public class GameState {
 		for (Snake s : snakeMap.values()) {
 			if (id != null && s.getId().equals(id)) {
 				s.draw(g, true);
+				drawScore(g, s);
+				drawLeaderBoard(g, s);
 			} else {
 				s.draw(g, false);
 			}
@@ -197,6 +201,7 @@ public class GameState {
 				//save their score
 		    }
 		}
+		updateLeaderBoard();
 	}
 
 	private void checkFood(Snake snake) {
@@ -214,6 +219,46 @@ public class GameState {
 			if (collidedFood != null) {
 				foodList.remove(collidedFood);
 			}
+		}
+	}
+	
+	private void drawScore(Graphics g, Snake s) {
+		int x = (int)Math.round(s.getHead().getX() + PlayerWindow.WINDOW_SIZE/2);
+		int y = (int)Math.round(s.getHead().getY() - PlayerWindow.WINDOW_SIZE/2 + 20);
+		String string = "Score: "
+				+ ""+s.getScore();
+		int textWidth = g.getFontMetrics().stringWidth(string);
+		g.setFont(new Font("Courier New", Font.PLAIN, 12));
+		g.setColor(Color.black);
+		g.drawString(string, x-textWidth - 10, y);
+	}
+	
+	private void updateLeaderBoard() {
+		leaderBoard = Collections.synchronizedList(new ArrayList<Snake>(snakeMap.values()));
+		Collections.sort(leaderBoard, new Comparator<Snake>() {
+			public int compare(Snake o1, Snake o2) {
+				if (o1.getScore() == o2.getScore()) {
+					return 0;
+				}
+				return o1.getScore() > o2.getScore() ? -1 : 1;
+			}
+		});
+	}
+	
+	private void drawLeaderBoard(Graphics g, Snake snake) {
+		int x = (int)Math.round(snake.getHead().getX() - PlayerWindow.WINDOW_SIZE/2);
+		int y = (int)Math.round(snake.getHead().getY() - PlayerWindow.WINDOW_SIZE/2 + 20);
+		g.setColor(new Color(0,0,0,50));
+		g.fillRect(x, y-20, 100, 15*7);
+		
+		g.setFont(new Font("Courier New", Font.PLAIN, 12));
+		g.setColor(Color.black);
+		g.drawString("LEADERBOARD", x, y);
+		y += 15;
+		for (int i = 0; i < 5; i++) {
+			
+			g.drawString("#" + i+1 + ": " + leaderBoard.get(i).getId() + " [" + leaderBoard.get(i).getScore() + "]", x, y);
+			y += 15;
 		}
 	}
 	
