@@ -9,9 +9,11 @@ package edu.unisa.concurrentSnakeGame;
  */
 public class ServerGameStateUpdaterThread implements Runnable {
 	static GameState myGame;
+	static BufferIO myBuffer;	
 
-	public ServerGameStateUpdaterThread(GameState myGame) {
+	public ServerGameStateUpdaterThread(GameState myGame, BufferIO myBuffer) {
 		ServerGameStateUpdaterThread.myGame = myGame;
+		ServerGameStateUpdaterThread.myBuffer = myBuffer;
 	}
 	
 	@Override

@@ -24,13 +24,15 @@ import org.mapdb.DBMaker;
 public class Main implements KeyListener {
 	public static final int GAME_SIZE = 1504;
 	public static final int NUMBER_OF_PLAYER_MANAGING_THREADS =4;
-	public static int AMOUNT_OF_LOCAL_PLAYERS = 4;
-	public static int AMOUNT_OF_AI_PLAYERS = 100;
+	public static int amountLocalPlayers = 4;
+	public static int amountAiPlayers = 100;
 	static int gameType;
 	private static String[] playerNames;
+	static ThreadPoolExecutor executor;
 
 	static GameState myGame = new GameState();
 	static BufferIO myBuffer = new BufferIO();
+	static MonitorLoggedIn monitor = new MonitorLoggedIn();
 
 	final int FPS = 25;
 
@@ -44,46 +46,46 @@ public class Main implements KeyListener {
 		 * 1 Player Gametype
 		 */
 		if(gameType == 1){ 
-			AMOUNT_OF_LOCAL_PLAYERS = 1;
-			AMOUNT_OF_AI_PLAYERS = 5;
+			amountLocalPlayers = 1;
+			amountAiPlayers = 10;
 		}else if(gameType == 2){
-			AMOUNT_OF_LOCAL_PLAYERS = 4;
-			AMOUNT_OF_AI_PLAYERS = 100;
+			amountLocalPlayers = 4;
+			amountAiPlayers = 10;
 		}else if(gameType == 3){
-			AMOUNT_OF_LOCAL_PLAYERS = 4;
-			AMOUNT_OF_AI_PLAYERS = 100;
+			amountLocalPlayers = 4;
+			amountAiPlayers = 100;
 		}
 		
 
-		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(AMOUNT_OF_LOCAL_PLAYERS+AMOUNT_OF_AI_PLAYERS);
-		
-		addLocalPlayers("Player",AMOUNT_OF_LOCAL_PLAYERS, executor);
-		addAIPlayers("AI",AMOUNT_OF_AI_PLAYERS, executor);
+
+//		
+//		addLocalPlayers("Player",AMOUNT_OF_LOCAL_PLAYERS, executor);
+//		addAIPlayers("AI",AMOUNT_OF_AI_PLAYERS, executor);
 		executor.shutdown();
 		initComponents();
 		renderLoop();
 	}
 	
-	private void addLocalPlayers(String name, int amount, ThreadPoolExecutor executor) {
-		for (int i = 0; i<AMOUNT_OF_LOCAL_PLAYERS; i++) {			
-			new PlayerLocal("Player"+(i+1), myBuffer, myGame, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-		}
-	}
-	
-	/**
-	 * Adds lots of players. Temporary solution.
-	 */
-	private void addAIPlayers(String name, int amount, ThreadPoolExecutor executor) {
-		for (int i = 0; i<amount; i++) {			
-			PlayerAI player = new PlayerAI(name+(i+1), myBuffer, myGame);
-			//Thread playerThread = new Thread(player);
-			//playerThread.setName("AIThread"+i);
-			//playerThread.start();
-			//myMonitor.addLoggedOutPlayer(player);
-			
-			executor.execute(player);
-		}
-	}
+//	private void addLocalPlayers(String name, int amount, ThreadPoolExecutor executor) {
+//		for (int i = 0; i<AMOUNT_OF_LOCAL_PLAYERS; i++) {			
+//			new PlayerLocal("Player"+(i+1), myBuffer, myGame, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+//		}
+//	}
+//	
+//	/**
+//	 * Adds lots of players. Temporary solution.
+//	 */
+//	private void addAIPlayers(String name, int amount, ThreadPoolExecutor executor) {
+//		for (int i = 0; i<amount; i++) {			
+//			PlayerAI player = new PlayerAI(name+(i+1), myBuffer, myGame);
+//			//Thread playerThread = new Thread(player);
+//			//playerThread.setName("AIThread"+i);
+//			//playerThread.start();
+//			//myMonitor.addLoggedOutPlayer(player);
+//			
+//			executor.execute(player);
+//		}
+//	}
 
 	/**
 	 * Starts the threads and names them
@@ -102,76 +104,91 @@ public class Main implements KeyListener {
 
 				.make();
 		ConcurrentNavigableMap<String, String> accMap = db.getTreeMap("AccountMap");
+		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(amountLocalPlayers+amountAiPlayers);
 
 		/**
 		* Creates the swing frame and creates the buttons
 		*/
-        ImageIcon snake = new ImageIcon("snake.png");
-        JLabel Jsnake = new JLabel(snake);
-        
-        JFrame frame = new JFrame("Snake Game");
-        JButton login1 = new JButton(new ImageIcon("login1.png"));
-        JButton login4 = new JButton(new ImageIcon("login4.png"));
-        JButton login100 = new JButton(new ImageIcon("login100.png"));
-        
-        /**
-         * 1 Player
-         */
-        login1.addActionListener(
-                                 new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                playerNames = new String[1];
-                Login1 loginDlg = new Login1(frame, accMap);
-                loginDlg.setVisible(true);
-                
-                if(loginDlg.isSucceeded()){
-                    playerNames[0] = loginDlg.getUsername();
-                    gameType = 1;
-                    startGame();
-                    
-                }
-            }
-        });
-        
-        /**
-         * 4 Player
-         */
-        login4.addActionListener(
-                                 new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                Login4 loginDlg = new Login4(frame, accMap);
-                loginDlg.setVisible(true);
-                
-                if(loginDlg.isSucceeded()){
-                    playerNames = loginDlg.getUsernames();
-                    gameType = 2;
-                    startGame();
-                    
-                }
-            }
-        });
-        
-        
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(250, 430);
-        frame.setLayout(new FlowLayout());
-        frame.getContentPane().add(Jsnake);
-        frame.getContentPane().add(login1);
-        frame.getContentPane().add(login4);
-        frame.getContentPane().add(login100);
-        frame.setVisible(true);
-        
+		final JFrame frame = new JFrame("ConcurrentLogin");
+		final JButton btnLogin = new JButton("Click to login 1 Player");
+		final JButton btnLogin4 = new JButton("Click to login 4 Players");
+		final JButton btnLogin100 = new JButton("Click to login 104 Players");
+		
+		
+		/**
+		* 1 Player
+		*/
+		btnLogin.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						playerNames = new String[1];
+						Login1 loginDlg = new Login1(frame, accMap, executor, myGame, myBuffer, monitor);
+						loginDlg.setVisible(true);
 
+						if(loginDlg.isSucceeded()){
+							playerNames[0] = loginDlg.getUsernames()[0];
+							gameType = 1;
+							startGame();
+							
+						}
+					}
+				});
+		
+		/**
+		* 4 Player
+		*/
+		btnLogin4.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						Login4 loginDlg = new Login4(frame, accMap, executor, myGame, myBuffer, monitor);
+						loginDlg.setVisible(true);
+						
+						if(loginDlg.isSucceeded()){
+							playerNames = loginDlg.getUsernames();
+							gameType = 2;
+							startGame();
+							
+						}
+					}
+				});
+		
+		/**
+		* 105 Player
+		*/
+		btnLogin100.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						Login100 loginDlg = new Login100(frame, accMap, executor, myGame, myBuffer, monitor);
+						loginDlg.setVisible(true);
+						
+						if(loginDlg.isSucceeded()){
+					
+							gameType = 3;
+							startGame();
+							
+						}
+					}
+				});
+
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(300, 200);
+		frame.setLayout(new FlowLayout());
+		frame.getContentPane().add(btnLogin);
+		frame.getContentPane().add(btnLogin4);
+		frame.getContentPane().add(btnLogin100);
+		frame.setVisible(true);
+
+		                                      
 	}
 	private static void startGame(){
 		
 		for (int i=0; i<NUMBER_OF_PLAYER_MANAGING_THREADS; i++) {
-			Thread t = new Thread(new ServerInputThread(myGame, myBuffer));
+			Thread t = new Thread(new ServerInputThread(myGame, myBuffer, monitor));
 			t.setName("Thread"+(i+1));
 			t.start();
 		}
 		
-		Thread t2 = new Thread(new ServerGameStateUpdaterThread(myGame));
+		Thread t2 = new Thread(new ServerGameStateUpdaterThread(myGame, myBuffer));
 		t2.setName("GameStateUpdater");
 		t2.start();
 
@@ -257,6 +274,7 @@ public class Main implements KeyListener {
         menubar.add(help);  
         
         jFrame.setJMenuBar(menubar);
+		jFrame.setVisible(true);		
 	}
 
 	/**

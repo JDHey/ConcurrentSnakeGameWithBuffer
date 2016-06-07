@@ -4,10 +4,12 @@ package edu.unisa.concurrentSnakeGame;
 public class ServerInputThread implements Runnable {
 	static GameState myGame;
 	static BufferIO myBuffer;
+	static MonitorLoggedIn monitor;
 
-	public ServerInputThread(GameState myGame, BufferIO myBuffer) {
+	public ServerInputThread(GameState myGame, BufferIO myBuffer, MonitorLoggedIn monitor) {
 		ServerInputThread.myGame = myGame;
 		ServerInputThread.myBuffer = myBuffer;
+		ServerInputThread.monitor = monitor;
 	}
 
 	@Override
@@ -30,12 +32,13 @@ public class ServerInputThread implements Runnable {
 	private void gameLoop() {
 		while(!Thread.currentThread().isInterrupted()) {
 			myGame.delay();
-			
+
 			PlayerNetworkData data = myBuffer.take();
-			//Sets the direction of the player
-			if (!myGame.setDirectionPlayer(data)) {
-				//If it doesn't work, add a player
-				myGame.addPlayer(data.getId());
+
+			if(monitor.search(data.getId())){
+				if (!myGame.setDirectionPlayer(data)) {
+					myGame.addPlayer(data.getId());
+				}
 			}
 		}
 

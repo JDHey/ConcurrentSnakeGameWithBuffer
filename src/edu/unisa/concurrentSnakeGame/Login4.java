@@ -8,11 +8,13 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -45,12 +47,23 @@ public class Login4 extends JDialog{
 	private JLabel lbPassword4;
 	private JButton btnAutofill;
 	private boolean succeeded;
+	static ThreadPoolExecutor executor;
+	static GameState myGame;
+	static BufferIO myBuffer;
+	static MonitorLoggedIn monitor;
 
 
-	public Login4(Frame parent, ConcurrentNavigableMap<String, String> Map) {
+
+
+	public Login4(Frame parent, ConcurrentNavigableMap<String, String> Map,ThreadPoolExecutor executor, GameState myGame, BufferIO myBuffer, MonitorLoggedIn monitor) {
 		super(parent, "Login", true);
 
 		accMap = Map;
+		this.executor = executor;
+		this.myGame = myGame;
+		this.myBuffer = myBuffer;
+		this.monitor = monitor;
+
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints cs = new GridBagConstraints();
 
@@ -160,21 +173,21 @@ public class Login4 extends JDialog{
 		btnAutofill = new JButton("Fill Login");
 
 		btnAutofill.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tfUsername1.setText("John");
 				pfPassword1.setText("1234");
-				
+
 				tfUsername2.setText("bob");
 				pfPassword2.setText("password");
-				
+
 				tfUsername3.setText("jeff");
 				pfPassword3.setText("jeff");
-				
+
 				tfUsername4.setText("1");
 				pfPassword4.setText("1");
-				
+
 			}
 		});
 		btnLogin.addActionListener(new ActionListener() {
@@ -238,21 +251,33 @@ public class Login4 extends JDialog{
 	}
 
 	public String[] getUsernames() {
-		String[] usernames = new String[4];
+		String[] usernames = new String[14];
 		usernames[0] = tfUsername1.getText().trim();
 		usernames[1] = tfUsername2.getText().trim();
 		usernames[2] = tfUsername3.getText().trim();
 		usernames[3] = tfUsername4.getText().trim();
+		
+		for (int i = 4; i < 14; i++){
+			if(!Arrays.asList(usernames).contains(Integer.toString(i))){
+				usernames[i] = Integer.toString(i);
+			}
+		}
 		return usernames;
 	}
 
 	public String[] getPasswords() {
-		String[] passwords = new String[4];
+		String[] passwords = new String[14];
 		passwords[0] = new String(pfPassword1.getPassword());
 		passwords[1] = new String(pfPassword2.getPassword());
 		passwords[2] = new String(pfPassword3.getPassword());
 		passwords[3] = new String(pfPassword4.getPassword());
 		
+		for (int i = 4; i < 14; i++){
+			if(!Arrays.asList(passwords).contains(Integer.toString(i))){
+				passwords[i] = Integer.toString(i);
+			}
+		}
+
 		return passwords;
 	}
 
@@ -265,42 +290,49 @@ public class Login4 extends JDialog{
 
 		String[] usernames = getUsernames();
 		String[] passwords = getPasswords();
-		RunnableAuth[] runnables = new RunnableAuth[4];
-		
-	
+		RunnableAuth[] runnables = new RunnableAuth[14];
+		Thread[] threads = new Thread[14];
+
+
+
 		for(int i = 0; i < 4; i++){
-			runnables[i] = new RunnableAuth(usernames[i], passwords[i], accMap);
+			runnables[i] = new RunnableAuth(usernames[i], passwords[i], accMap, false, executor, myGame, myBuffer, monitor);
+			threads[i] = new Thread(runnables[i]);
 		}
-	
-		Thread thPlayer1 = new Thread(runnables[0]);
-		Thread thPlayer2 = new Thread(runnables[1]);
-		Thread thPlayer3 = new Thread(runnables[2]);
-		Thread thPlayer4 = new Thread(runnables[3]);
-		
-		thPlayer1.start();
-		thPlayer2.start();
-		thPlayer3.start();
-		thPlayer4.start();
-		
-	
-		while(thPlayer1.isAlive() || thPlayer2.isAlive() || thPlayer3.isAlive() || thPlayer4.isAlive()){
-			System.out.println("waiting");
+
+		for(int i = 4; i < 14; i++){
+			runnables[i] = new RunnableAuth(usernames[i], passwords[i], accMap, true, executor, myGame, myBuffer, monitor);
+			threads[i] = new Thread(runnables[i]);
+		}
+
+		for(int i = 0; i < 14; i++){
+			threads[i].start();
 		}
 		
-		
-		for(int i = 0; i < 4; i++){
+
+
+
+
+		for(Thread th : threads){
+			while(th.isAlive()){
+				System.out.println("waiting");
+			}
+		}
+
+
+		for(int i = 0; i < runnables.length; i++){
 			if(!(boolean) (runnables[i]).get()){
 				return false;
 			}
 		}
-		
-//	for(int i = 0; i< 4; i++){
-//		if(accMap.containsKey(usernames[i])){
-//			if(accMap.get(usernames[i]).equals(passwords[i])){
-//				return true;
-//			}
-//		}
-//	}
+
+		//	for(int i = 0; i< 4; i++){
+		//		if(accMap.containsKey(usernames[i])){
+		//			if(accMap.get(usernames[i]).equals(passwords[i])){
+		//				return true;
+		//			}
+		//		}
+		//	}
 
 		return true;
 
