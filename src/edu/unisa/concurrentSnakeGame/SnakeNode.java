@@ -1,6 +1,5 @@
 package edu.unisa.concurrentSnakeGame;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class SnakeNode extends Node {

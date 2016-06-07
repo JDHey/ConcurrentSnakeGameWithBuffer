@@ -1,5 +1,10 @@
 package edu.unisa.concurrentSnakeGame;
 
+/**
+ * This class holds data to be packaged and passed through the buffer
+ * @author Jayden
+ *
+ */
 public class PlayerNetworkData {
 	private String id;
 	private Player.Move keyPressed;

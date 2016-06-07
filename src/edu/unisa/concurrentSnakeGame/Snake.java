@@ -17,6 +17,7 @@ public class Snake {
 	public static final int TURNING_SPEED = 5;
 	public static final double TURBO_SPEED = DEFAULT_SPEED*1.5;
 	public static final int MINIMUM_SIZE = 10;
+	public static final int FOOD_LENGTH_INCREASE = 10;
 
 	private String id;
 	private int direction;
@@ -24,6 +25,8 @@ public class Snake {
 	private State currentState;
 	private Player.Move lastKeyPressed;
 	private double speed;
+	
+	private boolean isBoosting;
 
 	private int score;
 	
@@ -37,6 +40,7 @@ public class Snake {
 		score = 0;
 		lastKeyPressed = Player.Move.NONE;
 		speed = DEFAULT_SPEED;
+		isBoosting = false;
 		
 		//To make sure the colour is dark and not bright white
 		//I multiply by only 200 and not 255
@@ -162,8 +166,7 @@ public class Snake {
 		switch (lastKeyPressed) {
 			case UP:
 				if (nodeList.size()>MINIMUM_SIZE) {
-					speed = TURBO_SPEED;
-					decreaseLength(1);
+					isBoosting = true;
 				}
 				break;
 			case DOWN:
@@ -177,9 +180,15 @@ public class Snake {
 				break;
 			case NONE:
 				speed = DEFAULT_SPEED;
+				isBoosting = false;
 			default:
 				//Shouldn't be default
 				break;
+		}
+		
+		if (isBoosting) {
+			speed = TURBO_SPEED;
+			decreaseLength(1);
 		}
 	}
 	
@@ -240,7 +249,6 @@ public class Snake {
 			g.drawString("YOU", headX-textWidth/2, headY-headSize);
 			g.setColor(colour);
 			g.fillOval(headX-headSize/2, headY-headSize/2, headSize, headSize);
-			
 			
 		} else {
 			//Draws the body

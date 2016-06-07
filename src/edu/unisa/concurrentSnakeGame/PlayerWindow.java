@@ -3,9 +3,15 @@ package edu.unisa.concurrentSnakeGame;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.Timer;
 
 public class PlayerWindow {
@@ -14,6 +20,8 @@ public class PlayerWindow {
 	
 	JFrame jFrame;
 	DrawSurface jPanel;
+    
+    Main menu;
 	
 	public PlayerWindow(String playerId, GameState gameState) {
 		jPanel = new DrawSurface(gameState);
@@ -44,6 +52,54 @@ public class PlayerWindow {
 
 		jFrame.add(jPanel);
 		jFrame.setVisible(true);
+        
+        JMenuBar menubar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        file.setMnemonic(KeyEvent.VK_F);
+        JMenuItem exitMenu = new JMenuItem("Exit");
+        exitMenu.setMnemonic(KeyEvent.VK_E);
+        exitMenu.setToolTipText("Exit Snake Game");
+        exitMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        JMenu tools = new JMenu("Sound");
+        tools.setMnemonic(KeyEvent.VK_T);
+        JMenuItem sound = new JMenuItem("Play");
+        sound.setMnemonic(KeyEvent.VK_P);
+        sound.setToolTipText("Play Sound");
+        sound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                sound s = new sound();
+            }
+        });
+        
+        JMenu help = new JMenu("Help");
+        help.setMnemonic(KeyEvent.VK_H);
+        JMenuItem aboutMenu = new JMenuItem("About");
+        aboutMenu.setMnemonic(KeyEvent.VK_A);
+        aboutMenu.setToolTipText("About Snake Game");
+        aboutMenu.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                About a = new About(menu);
+            }
+        });
+        
+        file.add(exitMenu);
+        menubar.add(file);
+        
+        tools.add(sound);
+        menubar.add(tools);
+        
+        help.add(aboutMenu);
+        menubar.add(help);  
+        
+        jFrame.setJMenuBar(menubar);
 	}
 
 	/**
