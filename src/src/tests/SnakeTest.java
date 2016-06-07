@@ -17,9 +17,10 @@ import java.util.List;
 import static edu.unisa.concurrentSnakeGame.Snake.DEFAULT_SPEED;
 import static edu.unisa.concurrentSnakeGame.Snake.STARTING_LENGTH;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Terry on 6/06/2016.
@@ -59,6 +60,96 @@ public class SnakeTest {
         assertEquals(expected_move, snake.getLastKeyPressed());
         assertEquals(expected_speed, snake.getSpeed(),0000001);
     }
+
+    @Test
+    public void get_id_test_01() {
+        System.out.println("Testing  Snake Class: get_id_test_01");
+        snake = Mockito.mock(Snake.class, Mockito.CALLS_REAL_METHODS);
+        String expected = "Snake_ID";
+        assertEquals(expected, snake.getId(), null);
+    }
+
+    @Test
+    public void increaseLength_test_01() {
+        System.out.println("Testing  Snake Class: increaseLength_test_01");
+        snake = new Snake("mysnake", 10,10);
+        int expected_default = 41;
+        int expected_size_now = 61;
+        assertEquals(expected_default, snake.getNodeList().size());
+        snake.increaseLength(20, true);
+        assertEquals(expected_size_now, snake.getNodeList().size());
+    }
+
+    @Test
+    public void decrease_length_test_01() {
+        System.out.println("Testing  Snake Class: decrease_length_test_01");
+        snake = new Snake("mysnake", 10,10);
+        int expected_default = 41;
+        assertEquals(expected_default, snake.getNodeList().size());
+        snake.decreaseLength(1);
+        int expected_size_now = 40;
+        assertEquals(expected_size_now, snake.getNodeList().size());
+    }
+
+    @Test
+    public void get_head_test_01() {
+        System.out.println("Testing  Snake Class: get_head_test_01");
+        snake = new Snake("mysnake", 10,10);
+        int size = snake.getNodeList().size();
+        SnakeNode expected = snake.getNodeList().get(size  -1);
+        assertEquals(expected, snake.getHead());
+    }
+
+    @Test
+    public void get_tail_test_01() {
+        System.out.println("Testing  Snake Class: get_tail_test_01");
+        snake = new Snake("mysnake", 10,10);
+        SnakeNode expected = snake.getNodeList().get(0);
+        assertEquals(expected, snake.getTail());
+    }
+
+    @Test
+    public void update_test_01() {
+        System.out.println("Testing  Snake Class: update_test_01");
+
+    }
+
+    @Test
+    public void move_test_01() {
+        System.out.println("Testing  Snake Class: move_test_01");
+
+    }
+
+    @Test
+    public void getDirection_test_01() {
+        System.out.println("Testing  Snake Class: getDirection_test_01");
+        snake = Mockito.mock(Snake.class, Mockito.CALLS_REAL_METHODS);
+        int expected = 0;
+        assertEquals(expected, snake.getDirection());
+
+    }
+
+    @Test
+    public void setDirection_test_01() {
+        System.out.println("Testing  Snake Class: setDirection_test_01");
+        snake = Mockito.mock(Snake.class, Mockito.CALLS_REAL_METHODS);
+        int expected = 2;
+        snake.setDirection(2);
+        assertEquals(expected, snake.getDirection());
+    }
+
+    @Test
+    public void change_direction_test_01() {
+        System.out.println("Testing  Snake Class: change_direction_test_01");
+    }
+
+    @Test
+    public void collidesWith_test_01() {
+        System.out.println("Testing  Snake Class: collidesWith_test_01");
+
+    }
+
+
 
 
 }
