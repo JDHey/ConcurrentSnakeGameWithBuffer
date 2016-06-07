@@ -32,6 +32,8 @@ public class Main implements KeyListener {
 
 	JFrame jFrame;
 	DrawSurface jPanel;
+    
+    Main menu;
 
 	public Main() {
 		/**
@@ -100,57 +102,61 @@ public class Main implements KeyListener {
 		/**
 		* Creates the swing frame and creates the buttons
 		*/
-		final JFrame frame = new JFrame("JDialog Demo");
-		final JButton btnLogin = new JButton("Click to login 1 Player");
-		final JButton btnLogin4 = new JButton("Click to login 4 Players");
-		final JButton btnLogin100 = new JButton("Click to login 100 Players");
-
-		/**
-		* 1 Player
-		*/
-		btnLogin.addActionListener(
-				new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						playerNames = new String[1];
-						Login1 loginDlg = new Login1(frame, accMap);
-						loginDlg.setVisible(true);
-
-						if(loginDlg.isSucceeded()){
-							playerNames[0] = loginDlg.getUsername();
-							gameType = 1;
-							startGame();
-							
-						}
-					}
-				});
-		
-		/**
-		* 4 Player
-		*/
-		btnLogin4.addActionListener(
-				new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						Login4 loginDlg = new Login4(frame, accMap);
-						loginDlg.setVisible(true);
-						
-						if(loginDlg.isSucceeded()){
-							playerNames = loginDlg.getUsernames();
-							gameType = 2;
-							startGame();
-							
-						}
-					}
-				});
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 200);
-		frame.setLayout(new FlowLayout());
-		frame.getContentPane().add(btnLogin);
-		frame.getContentPane().add(btnLogin4);
-		frame.getContentPane().add(btnLogin100);
-		frame.setVisible(true);
-
-		
+        ImageIcon snake = new ImageIcon("snake.png");
+        JLabel Jsnake = new JLabel(snake);
+        
+        JFrame frame = new JFrame("Snake Game");
+        JButton login1 = new JButton(new ImageIcon("login1.png"));
+        JButton login4 = new JButton(new ImageIcon("login4.png"));
+        JButton login100 = new JButton(new ImageIcon("login100.png"));
+        
+        /**
+         * 1 Player
+         */
+        login1.addActionListener(
+                                 new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                playerNames = new String[1];
+                Login1 loginDlg = new Login1(frame, accMap);
+                loginDlg.setVisible(true);
+                
+                if(loginDlg.isSucceeded()){
+                    playerNames[0] = loginDlg.getUsername();
+                    gameType = 1;
+                    startGame();
+                    
+                }
+            }
+        });
+        
+        /**
+         * 4 Player
+         */
+        login4.addActionListener(
+                                 new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                Login4 loginDlg = new Login4(frame, accMap);
+                loginDlg.setVisible(true);
+                
+                if(loginDlg.isSucceeded()){
+                    playerNames = loginDlg.getUsernames();
+                    gameType = 2;
+                    startGame();
+                    
+                }
+            }
+        });
+        
+        
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(250, 430);
+        frame.setLayout(new FlowLayout());
+        frame.getContentPane().add(Jsnake);
+        frame.getContentPane().add(login1);
+        frame.getContentPane().add(login4);
+        frame.getContentPane().add(login100);
+        frame.setVisible(true);
+        
 
 	}
 	private static void startGame(){
@@ -197,7 +203,56 @@ public class Main implements KeyListener {
 		jPanel.addKeyListener(this);
 
 		jFrame.add(jPanel);
-		jFrame.setVisible(true);		
+		jFrame.setVisible(true);
+        
+        JMenuBar menubar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        file.setMnemonic(KeyEvent.VK_F);
+        JMenuItem exitMenu = new JMenuItem("Exit");
+        exitMenu.setMnemonic(KeyEvent.VK_E);
+        exitMenu.setToolTipText("Exit Snake Game");
+        exitMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        JMenu tools = new JMenu("Sound");
+        tools.setMnemonic(KeyEvent.VK_T);
+        JMenuItem sound = new JMenuItem("Play");
+        sound.setMnemonic(KeyEvent.VK_P);
+        sound.setToolTipText("Play Sound");
+        sound.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                sound s = new sound();
+            }
+        });
+        
+        
+        JMenu help = new JMenu("Help");
+        help.setMnemonic(KeyEvent.VK_H);
+        JMenuItem aboutMenu = new JMenuItem("About");
+        aboutMenu.setMnemonic(KeyEvent.VK_A);
+        aboutMenu.setToolTipText("About Snake Game");
+        aboutMenu.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                About a = new About(menu);
+            }
+        });
+        
+        file.add(exitMenu);
+        menubar.add(file);
+        
+        tools.add(sound);
+        menubar.add(tools);
+        
+        help.add(aboutMenu);
+        menubar.add(help);  
+        
+        jFrame.setJMenuBar(menubar);
 	}
 
 	/**
