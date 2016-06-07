@@ -320,11 +320,6 @@ public class Login4 extends JDialog{
 		}
 
 
-		for(int i = 0; i < runnables.length; i++){
-			if(!(boolean) (runnables[i]).get()){
-				return false;
-			}
-		}
 
 		//	for(int i = 0; i< 4; i++){
 		//		if(accMap.containsKey(usernames[i])){
