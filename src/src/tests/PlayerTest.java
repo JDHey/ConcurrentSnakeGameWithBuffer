@@ -50,10 +50,10 @@ public class PlayerTest {
   @Test
     public void args_constructor_test_01() {
         System.out.println("Testing Abstract Player  Class: args_constructor_test_01");
-        PlayerLocal player = new PlayerLocal("Terry Dean",myBuffer, gameState, upKey, downKey, leftKey, rightKey);
-        player.setLastKeyPressed(Player.Move.LEFT);
         myBuffer = new BufferIO();
         gameState = new GameState();
+        PlayerLocal player = new PlayerLocal("Terry Dean",myBuffer, gameState, upKey, downKey, leftKey, rightKey);
+        player.setLastKeyPressed(Player.Move.LEFT);
         gameState.addPlayer(player.getPlayerId());
         String expected_id = "Terry Dean";
         int expected_moves = 1;
@@ -111,12 +111,12 @@ public class PlayerTest {
     @Test
     public void update_game_state_01() {
         System.out.println("Testing Abstract Player  Class: update_game_state_01");
-        gameState = new GameState();
-        myBuffer = new BufferIO();
         PlayerLocal player = new PlayerLocal("Terry Dean", myBuffer, gameState, upKey, downKey, leftKey, rightKey);
+        GameState gameState = new GameState();
+        myBuffer = new BufferIO();
         gameState.addPlayer(player.getPlayerId());
-        snakeMap = player.getGameState().getSnakeMap();
+        player.updateGameState(gameState);
         int expected_snakes = 1;
-        assertEquals(expected_snakes, snakeMap.size());
+        assertEquals(expected_snakes, player.getGameState().getSnakeMap().size());
     }
 }

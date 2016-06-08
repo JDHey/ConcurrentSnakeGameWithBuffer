@@ -256,9 +256,10 @@ public class GameState {
 		g.drawString("LEADERBOARD", x, y);
 		y += 15;
 		for (int i = 0; i < 5; i++) {
-			
-			g.drawString("#" + i+1 + ": " + leaderBoard.get(i).getId() + " [" + leaderBoard.get(i).getScore() + "]", x, y);
-			y += 15;
+			if(leaderBoard.size() > 0) {
+				g.drawString("#" + i + 1 + ": " + leaderBoard.get(i).getId() + " [" + leaderBoard.get(i).getScore() + "]", x, y);
+				y += 15;
+			}
 		}
 	}
 	
